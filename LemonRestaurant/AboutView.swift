@@ -9,7 +9,19 @@ import SwiftUI
 
 struct AboutView: View {
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        Text("About Little Lemon")
+            .font(.largeTitle)
+            .padding()
+            .foregroundStyle(.green)
+        
+        Text("Welcome to Little Lemon, The best Italian restaurant in town! We have the best pasta in town, and the best service. We hope you enjoy your meal!")
+            .font(.body)
+            .padding()
+            .foregroundStyle(.yellow)
+        Image(systemName: "fork.knife")
+            .font(.largeTitle)
+            .padding()
+            .foregroundStyle(.green)
     }
 }
 
