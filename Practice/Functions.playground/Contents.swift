@@ -66,3 +66,30 @@ func welcomeStudent(name: String) -> String{
 }
 
 print(welcomeStudent(name: "David"))
+
+
+func greetCustomer(name: String){
+    print("Welcome \(name)")
+}
+
+greetCustomer(name: "David")
+
+
+func printMenuItem(name: String, price: Double){
+    print("\(name): $\(price)")
+}
+
+func renderRow(name: String, price: Double){
+    print("\(name): $\(price)")
+}
+
+
+let menu = [
+    "Pizza": 9.99,
+    "Soup": 8.99,
+    "Steak": 7.99
+]
+
+for (name,price) in menu{
+    printMenuItem(name:name, price:price)
+}

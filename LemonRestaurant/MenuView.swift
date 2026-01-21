@@ -12,6 +12,7 @@ struct MenuView: View {
     @State private var showMessage = false
     @State private var showAffordableOnly = false
     @State private var showDesserts = false
+    @State private var showPremiumItems = false
     
     // dictionary
     let menu: [String:Double] = [
@@ -42,23 +43,35 @@ struct MenuView: View {
     }
     
     // computed property 2: display affordables
-    var displayedMenu: [(name: String, price: Double)] {
-        if showAffordableOnly{
-            return sortedMenu.filter{ $0.price < 15}
-        }else{
-            return sortedMenu
+    //var displayedMenu: [(name: String, price: Double)] {
+    //    if showAffordableOnly{
+    //        return sortedMenu.filter{ $0.price < 15}
+    //    }else{
+    //        return sortedMenu
+    //    }
+    //}
+    
+    var filteredMenu: [(name: String, price: Double)] {
+        sortedMenu.filter { item in
+            if showAffordableOnly {
+                return item.price < 15
+            }
+            if showPremiumItems {
+                return item.price > 15
+            }
+            return true
         }
     }
     
     // computed property 3: average
     var averagePrice: Double {
-        let prices = displayedMenu.map{ $0.price } // extract the values
+        let prices = filteredMenu.map{ $0.price } // extract the values
         let total = prices.reduce(0, +) // sum
         return total / Double(prices.count)
     }
     
     func getTotalItems() -> Int {
-        displayedMenu.count
+        filteredMenu.count
     }
     
     //func getHighestItem() -> Double {
@@ -67,7 +80,7 @@ struct MenuView: View {
     
     func getHighestItem() -> Double {
         var highest = 0.0
-        for item in displayedMenu{
+        for item in filteredMenu{
             if item.price > highest{
                 highest = item.price
             }
@@ -111,6 +124,7 @@ struct MenuView: View {
             VStack{
                 Toggle("Show welcome message", isOn: $showMessage)
                 Toggle("Show items under $15", isOn: $showAffordableOnly)
+                Toggle("Show Premium Items", isOn: $showPremiumItems)
             }
             .padding()
             if showMessage{
@@ -129,30 +143,12 @@ struct MenuView: View {
             }
             .padding()
             .background(Color.green.opacity(0.2))
+            
+            
             //list
             List {
-                ForEach(displayedMenu, id: \.name) { name, price in
-                    HStack {
-                        // LEFT SIDE (stacked)
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text(name)
-                                .font(.headline)
-
-                            Text("$\(price, specifier: "%.2f")")
-                                .foregroundColor(.secondary)
-                        }
-
-                        Spacer()
-
-                        // RIGHT SIDE (Premium badge)
-                        if price > 15 {
-                            Text("*Premium")
-                                .font(.caption)
-                                .fontWeight(.semibold)
-                                .foregroundColor(.yellow)
-                        }
-                    }
-                    .padding(.vertical, 5)
+                ForEach(filteredMenu, id: \.name) {item in
+                    MenuItemRowView(name:item.name, price:item.price)
                 }
             }
 
